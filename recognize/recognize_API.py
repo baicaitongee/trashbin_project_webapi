@@ -44,8 +44,15 @@ def main(filepath):
     #print(type(cc))
     label=cc["data"]['fileList'][0]['label']
     out=read_xlsx.label2class(label)
-    if out['classx']!=None:
-        outee="这是"+out['object']
-    else:
-        outee="这是"+out['object']
+    #if out['classx']!=None:
+    outee="这是"+out['object']
+    #else:
+        #outee="这是"+out['object']
+    #print(outee)
+
     return outee
+
+if __name__=='__main__':
+  filpath="./1.jpg"
+
+  main(filpath)

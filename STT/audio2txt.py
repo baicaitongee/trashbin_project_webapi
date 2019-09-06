@@ -34,6 +34,9 @@ from wsgiref.handlers import format_date_time
 from datetime import datetime
 from time import mktime
 import _thread as thread
+from TTS import test_webtts
+from STT import get_audio, recongnize
+import threading
 
 STATUS_FIRST_FRAME = 0  # 第一帧的标识
 STATUS_CONTINUE_FRAME = 1  # 中间帧标识
@@ -87,8 +90,12 @@ class Ws_Param(object):
         return url
 
 
+
+
+
 # 收到websocket消息的处理
 def on_message(ws, message):
+
     try:
         code = json.loads(message)["code"]
         sid = json.loads(message)["sid"]
@@ -108,10 +115,16 @@ def on_message(ws, message):
             for x in range(len(data)):
                 phase+=data[x]['cw'][0]['w']
             print(phase)
-            #print("sid:%s call success!,data is:%s" % (sid, cc))
+
+            if phase=='小北小北':
+                test_webtts.play_audio('./output.wav')
+                t_cam = threading.Thread(target=recongnize.cam())  # 函数名不能带括号
+                t_cam.start()
+            else:
+                test_webtts.play_audio('./error.wav')
+                #print("sid:%s call success!,data is:%s" % (sid, cc))
     except Exception as e:
         print("receive msg,but parse exception:", e)
-
 
 
 # 收到websocket错误的处理
@@ -126,6 +139,7 @@ def on_close(ws):
 
 # 收到websocket连接建立的处理
 def on_open(ws):
+
     def run(*args):
         frameSize = 8000  # 每一帧的音频大小
         intervel = 0.04  # 发送音频间隔(单位:s)
@@ -172,15 +186,24 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
-    # 测试时候在此处正确填写相关信息即可运行
-    time1 = datetime.now()
-    wsParam = Ws_Param(APPID='5d668d4d', APIKey='ff5288cd3fc22ec336b567694e277450',
-                       APISecret='25d50b0ee0404f9ea83d611e32e35303',
-                       AudioFile=r'./1.pcm')
-    websocket.enableTrace(False)
-    wsUrl = wsParam.create_url()
-    ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close)
-    ws.on_open = on_open
-    ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
-    time2 = datetime.now()
-    print(time2-time1)
+    while(1):
+        input_filename = "input.pcm"               # 麦克风采集的语音输入
+        input_filepath = "./audioee/"              # 输入文件的path
+        in_path = input_filepath + input_filename
+
+
+
+        get_audio.get_audio(in_path)
+            # 测试时候在此处正确填写相关信息即可运行
+        time1 = datetime.now()
+        wsParam = Ws_Param(APPID='5d668d4d', APIKey='ff5288cd3fc22ec336b567694e277450',
+                               APISecret='25d50b0ee0404f9ea83d611e32e35303',
+                               AudioFile=r'./audioee/input.pcm')
+        websocket.enableTrace(False)
+        wsUrl = wsParam.create_url()
+        ws = websocket.WebSocketApp(wsUrl, on_message=on_message, on_error=on_error, on_close=on_close)
+        ws.on_open = on_open
+        ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+        time2 = datetime.now()
+        print(time2-time1)
+

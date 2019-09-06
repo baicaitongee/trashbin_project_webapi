@@ -4,8 +4,8 @@
 # -*- python3.5
 import pyaudio
 import wave
-input_filename = "input.wav"               # 麦克风采集的语音输入
-input_filepath = "./audioee"              # 输入文件的path
+input_filename = "input.pcm"               # 麦克风采集的语音输入
+input_filepath = "./audioee/"              # 输入文件的path
 in_path = input_filepath + input_filename
 
 def get_audio(filepath):
@@ -42,11 +42,11 @@ def get_audio(filepath):
         wf.setframerate(RATE)
         wf.writeframes(b''.join(frames))
         wf.close()
-    elif aa == str("否"):
+    elif aa == str("n"):
         exit()
     else:
         print("无效输入，请重新选择")
         get_audio(in_path)
 
 # 联合上一篇博客代码使用，就注释掉下面，单独使用就不注释
-get_audio(in_path)
+#get_audio(in_path)

@@ -162,11 +162,11 @@ def cam():
 
 
 
-def main():
-    """创建启动线程"""
-    t_cam = threading.Thread(target=cam)  # 函数名不能带括号
-    t_cam.start()
+# def main():
+#     """创建启动线程"""
+#     t_cam = threading.Thread(target=cam)  # 函数名不能带括号
+#     t_cam.start()
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
