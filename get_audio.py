@@ -7,8 +7,9 @@ input_filepath = "./audioee/"              # 输入文件的path
 in_path = input_filepath + input_filename
 
 def get_audio(filepath):
-    aa = str(input("是否开始录音？   （是/否）"))
-    if aa == str("y") :
+
+    #aa = str(input("是否开始录音？   （是/否）"))
+    #if aa == str("y") :
         CHUNK = 256
         FORMAT = pyaudio.paInt16
         CHANNELS = 1                # 声道数
@@ -40,11 +41,12 @@ def get_audio(filepath):
         wf.setframerate(RATE)
         wf.writeframes(b''.join(frames))
         wf.close()
-    elif aa == str("n"):
-        exit()
-    else:
-        print("无效输入，请重新选择")
-        get_audio(in_path)
+    #elif aa == str("n"):
+
+       # exit()
+    #else:
+        #print("无效输入，请重新选择")
+        #get_audio(in_path)
 
 # 联合上一篇博客代码使用，就注释掉下面，单独使用就不注释
 #get_audio(in_path)

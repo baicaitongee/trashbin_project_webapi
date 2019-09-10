@@ -17,6 +17,10 @@ import _thread as thread
 import test_webtts
 import get_audio, recongnize
 import threading
+import audio_text
+import re
+import os
+
 
 STATUS_FIRST_FRAME = 0  # 第一帧的标识
 STATUS_CONTINUE_FRAME = 1  # 中间帧标识
@@ -97,11 +101,31 @@ def on_message(ws, message):
             print(phase)
 
             if phase=='小北小北':
-                test_webtts.play_audio('./output.wav')
-                t_cam = threading.Thread(target=recongnize.cam())  # 函数名不能带括号
-                t_cam.start()
+                #test_webtts.play_audio('./output.wav')
+                test_webtts.main("您好,我是、智能垃圾分类系统,小北,请问,有什么可以帮您？")
+                while(1):
+                    audio_text.audio_text('./audio_tempure')
+                    filename = 'txt.txt'
+                    with open(filename, 'r') as file_object:
+                        net_txt=file_object.readlines()
+
+                    if net_txt!=None:
+                        # if re.search(str(net_txt), "结束。结束。结束。结束。", re.L) != []:
+                        #     test_webtts.main("好的，欢迎您，下次使用")
+                        #     break
+                        # else:
+                            test_webtts.main('好的，正在为您，开启智能识别！')
+                            t_cam = threading.Thread(target=recongnize.cam())  # 函数名不能带括号
+                            t_cam.start()
+                            os.remove(filename)
+
+            if phase=='结束 。':
+                test_webtts.main("好的，欢迎您，下次使用")
+
+
             else:
-                test_webtts.play_audio('./error.wav')
+                test_webtts.main("您的唤醒口令,不对，请重新输入： ")
+                #test_webtts.play_audio('./error.wav')
                 #print("sid:%s call success!,data is:%s" % (sid, cc))
     except Exception as e:
         print("receive msg,but parse exception:", e)

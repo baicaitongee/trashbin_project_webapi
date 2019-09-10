@@ -42,16 +42,14 @@ def getBody(filePath):
 def main(filepath):
     r = requests.post(URL,headers=getHeader(ImageName,ImageUrl),data=getBody(filepath))
     cc=r.json()
-    #print(type(cc))
+
     label=cc["data"]['fileList'][0]['label']
     out=read_xlsx.label2class(label)
-    #if out['classx']!=None:218.204.252.69
-    outee="这是"+out['object']
-    # else:
-    #     outee="这是"+out['object']
+    outee="这是，"+out['object']+"，属于"+out['classx']
     print(outee)
-
-    return outee
+    #print(cc)
+    #print(out['t'])
+    return outee,out['t']
 
 # if __name__=='__main__':
 #   filpath='./1.jpg'

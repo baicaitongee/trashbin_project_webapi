@@ -110,15 +110,27 @@ def cam():
 
                     mingcheng = save_path+str(num_pict)+str(time.strftime(" %m-%d %H_%M_%S", time.localtime(time.time())))+".png"
                     cv2.imwrite(mingcheng, frame)
-                    outee=recognize_API.main(mingcheng)
+                    outee,t=recognize_API.main(mingcheng)
                     print(outee)
+                    # print(type(t))
+                    # print(t)
+
                     test_webtts.main(outee)
-
-
                     #dc_example.main()
 
-                    update_data(1,1,1,1)
-                    print("已更新数据库")
+                    if t == 1:
+                        update_data(1, 0, 0, 0)
+                        print("数据库更新成功！")
+                    if t == 2:
+                        update_data(0, 1, 0, 0)
+                        print("数据库更新成功！")
+                    if t == 3:
+                        update_data(0, 0, 1, 0)
+                        print("数据库更新成功！")
+                    if t == 4:
+                        update_data(0, 0, 0, 1)
+                        print("数据库更新成功！")
+                    test_webtts.main("恭喜您，完成垃圾分类，此次获得积分，3分，目前账户积分，34分。")
 
                     # 等待两个机关启动时间
                     time.sleep(2)
@@ -166,7 +178,5 @@ def cam():
 #     """创建启动线程"""
 #     t_cam = threading.Thread(target=cam)  # 函数名不能带括号
 #     t_cam.start()
-
-
 # if __name__ == '__main__':
 #     main()

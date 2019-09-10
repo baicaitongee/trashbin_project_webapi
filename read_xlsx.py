@@ -40,9 +40,25 @@ def label2class(label):
         if label==worksheet.cell_value(i,0):
             object = worksheet.cell_value(i,2)
             classi = worksheet.cell_value(i,3)
-            #if worksheet.cell_value(i,4)!=None:
-                #classx=worksheet.cell_value(i,4)
-            out={"object":object,"class":classi}
+
+            classx=worksheet.cell_value(i,4)
+            print(type(classx))
+            print(classx)
+            t=0
+            if classx=="干垃圾":
+                t=1
+                #print("gan")
+            if classx=="湿垃圾":
+                t=2
+                #print("shi")
+            if classx=="可回收垃圾":
+                t=3
+                #print("huishou")
+            if classx=="有害垃圾":
+                t=4
+                #print("youhai")
+            #print(t)
+            out={"object":object,"classi":classi,"classx":classx,"t":t}
             break
     #print("没有这个货")
             
