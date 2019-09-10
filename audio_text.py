@@ -14,14 +14,17 @@ import _thread as thread
 import test_webtts
 import get_audio, recongnize
 import threading
-
+import os
 
 STATUS_FIRST_FRAME = 0  # 第一帧的标识
 STATUS_CONTINUE_FRAME = 1  # 中间帧标识
 STATUS_LAST_FRAME = 2  # 最后一帧的标识
 
-def audio_text(input_filepath):
-    #input_filepath为保存录音的路径，其翻译出来的内荣保存在txt.txt中
+def audio_text():
+    audio_input_filepath='./audioee'
+    output_text='out1.txt'
+    #input_filepath默认为./audioee，output_text为翻译出来的内荣保存在out1.txt中,随后被删除
+    #返回的是翻译出的文字
     class Ws_Param(object):
         # 初始化
         def __init__(self, APPID, APIKey, APISecret, AudioFile):
@@ -93,11 +96,11 @@ def audio_text(input_filepath):
                 phase=''
                 for x in range(len(data)):
                     phase+=data[x]['cw'][0]['w']
-                print(phase)
+                #print(phase)
                 tt=str(phase)
                 #将识别的内容保存进文件
-                filename = 'txt.txt'
-                with open(filename, 'a') as file_object:
+
+                with open(output_text, 'a') as file_object:
                     file_object.write(tt)
 
 
@@ -166,7 +169,7 @@ def audio_text(input_filepath):
 
 
     input_filename = "input.pcm"               # 麦克风采集的语音输入             # 输入文件的path
-    in_path = input_filepath + input_filename
+    in_path = audio_input_filepath + input_filename
 
 
 
@@ -183,3 +186,12 @@ def audio_text(input_filepath):
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
     time2 = datetime.now()
     print(time2-time1)
+
+    with open(output_text, 'r') as file_object:
+        phase = file_object.readlines()
+
+    os.remove(output_text)
+    return phase[0][:4]
+
+# tt=audio_text()
+# print(tt)
