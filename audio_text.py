@@ -21,8 +21,9 @@ STATUS_CONTINUE_FRAME = 1  # 中间帧标识
 STATUS_LAST_FRAME = 2  # 最后一帧的标识
 
 def audio_text():
-    audio_input_filepath='./audioee'
-    output_text='out1.txt'
+
+    audio_input_filepath="/home/baicaitong/trashbin_project_webapi/audioee"
+    output_text="./out1.txt"
     #input_filepath默认为./audioee，output_text为翻译出来的内荣保存在out1.txt中,随后被删除
     #返回的是翻译出的文字
     class Ws_Param(object):
@@ -87,11 +88,11 @@ def audio_text():
 
             else:
                 data = json.loads(message)["data"]["result"]["ws"]
-                # print(json.loads(message))
-                result = ""
-                for i in data:
-                    for w in i["cw"]:
-                        result += w["w"]
+                #print(json.loads(message))
+                # result = ""
+                # for i in data:
+                #     for w in i["cw"]:
+                #         result += w["w"]
                 #cc=json.dumps(data, ensure_ascii=False)
                 phase=''
                 for x in range(len(data)):
@@ -189,9 +190,10 @@ def audio_text():
 
     with open(output_text, 'r') as file_object:
         phase = file_object.readlines()
-
+    #print(phase)
     os.remove(output_text)
     return phase[0][:4]
 
-# tt=audio_text()
-# print(tt)
+tt=audio_text()
+print(tt)
+#audio_text()

@@ -106,5 +106,5 @@ def main(text):
     #   错误码链接：https://www.xfyun.cn/document/error-code （code返回错误码时必看）
         print(r.text)
 
-# if __name__=='__main__':
-#     main('传奇')
+if __name__=='__main__':
+    main('传奇')

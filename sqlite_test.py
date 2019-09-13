@@ -77,3 +77,75 @@ def update_data(class_a_add,class_b_add,class_c_add,class_d_add):
         create_task(conn, task_2)
 
 
+def query_person():
+    """
+    Query all rows in the tasks table
+    :param conn: the Connection object
+    :return:
+    """
+    database = r"./pythonsqlite.db"
+    conn = create_connection(database)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM person")
+
+        rows = cur.fetchall()
+
+        # for row in rows:
+        #     print(row)
+    return rows[0]
+def query_trash():
+    """
+    Query all rows in the tasks table
+    :param conn: the Connection object
+    :return:
+    """
+    database = r"./pythonsqlite.db"
+    conn = create_connection(database)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM trash")
+
+        rows = cur.fetchall()
+
+        # for row in rows:
+        #     print(row)
+    return rows[0]
+# t=query_person()
+# print(t[0])
+
+# q=query_trash()
+# print(q[2])
+
+
+
+
+
+
+
+
+
+
+
+
+# def select_task_by_priority(conn, priority):
+#     """
+#     Query tasks by priority
+#     :param conn: the Connection object
+#     :param priority:
+#     :return:
+#     """
+#     cur = conn.cursor()
+#     cur.execute("SELECT * FROM tasks WHERE priority=?", (priority,))
+#
+#     rows = cur.fetchall()
+#
+#     for row in rows:
+#         print(row)
+
+
+
+
+
+
+

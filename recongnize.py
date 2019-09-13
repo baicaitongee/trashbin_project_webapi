@@ -150,10 +150,10 @@ def cam():
             # print(num_pict)
 
             # 显示图像
-            cv2.imshow("capture", frame)
+            #cv2.imshow("capture", frame)
             # cv2.imshow("Thresh", thresh)
             # 进行阀值化来显示图片中像素强度值有显著变化的区域的画面
-            cv2.imshow("Frame Delta", img_delta)
+            #cv2.imshow("Frame Delta", img_delta)
             # 不同按键不同功能
             key = cv2.waitKey(1) & 0xFF
             # 按'q'健退出循环
