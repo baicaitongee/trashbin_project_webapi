@@ -190,10 +190,18 @@ def audio_text():
 
     with open(output_text, 'r') as file_object:
         phase = file_object.readlines()
-    #print(phase)
+    #print(len(phase))
+    if len(phase) == 1:
+        if len(phase[0])>=4:
+            text=phase[0][:4]
+        else:
+            text=phase[0]
+    else:
+        text='0'
     os.remove(output_text)
-    return phase[0][:4]
+    return text
+if __name__=='__main__':
 
-tt=audio_text()
-print(tt)
+    tt=audio_text()
+    print(tt)
 #audio_text()

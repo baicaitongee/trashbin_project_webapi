@@ -1,10 +1,12 @@
 # -*-coding:utf-8 -*-  
 #完成调用摄像头并且截图后导入图像识别进行识别并更新数据库的功能。
+import ctypes
+import inspect
 import threading
 import cv2
 import time
 import shutil
-from keras.models import load_model
+
 from PIL import Image
 import numpy as np
 
@@ -104,11 +106,13 @@ def cam():
                     # 等待图像稳定时间
                     time.sleep(1)
                     num_pict += 1
-                    print("出现目标物，请求核实第"+str(num_pict)+"张   "+str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))))
+                    print("出现目标物，请求核实第"+str(num_pict)+"张_"+str(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime(time.time()))))
 
                     ret, frame = camera.read()
+                    cv2.imshow("PIC", frame)
+                    cv2.waitKey(1)
 
-                    mingcheng = save_path+str(num_pict)+str(time.strftime(" %m-%d %H_%M_%S", time.localtime(time.time())))+".png"
+                    mingcheng = save_path+str(num_pict)+str(time.strftime("%m-%d_%H-%M-%S", time.localtime(time.time())))+".png"
                     cv2.imwrite(mingcheng, frame)
                     outee,t=recognize_API.main(mingcheng)
                     print(outee)
@@ -135,6 +139,15 @@ def cam():
                     # 等待两个机关启动时间
                     time.sleep(2)
                     print('相机再启动时间'+str(time.strftime(" %m-%d %H_%M_%S", time.localtime(time.time()))))
+                    ret, frame = camera.read()
+                    # 转灰度图
+                    gray_lwpCV = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+                    gray_lwpCV = cv2.resize(gray_lwpCV, (500, 500))
+                    # 用高斯滤波进行模糊处理
+                    gray_lwpCV = cv2.GaussianBlur(gray_lwpCV, (21, 21), 0)
+
+                    pre_frame = gray_lwpCV
                     break
             ret, frame = camera.read()
             # 转灰度图
@@ -150,10 +163,10 @@ def cam():
             # print(num_pict)
 
             # 显示图像
-            #cv2.imshow("capture", frame)
-            # cv2.imshow("Thresh", thresh)
+            cv2.imshow("capture", frame)
+            cv2.imshow("Thresh", thresh)
             # 进行阀值化来显示图片中像素强度值有显著变化的区域的画面
-            #cv2.imshow("Frame Delta", img_delta)
+            # cv2.imshow("Frame Delta", img_delta)
             # 不同按键不同功能
             key = cv2.waitKey(1) & 0xFF
             # 按'q'健退出循环
@@ -174,9 +187,33 @@ def cam():
 
 
 
-# def main():
-#     """创建启动线程"""
-#     t_cam = threading.Thread(target=cam)  # 函数名不能带括号
-#     t_cam.start()
-# if __name__ == '__main__':
-#     main()
+def main():
+    global t_cam
+    """创建启动线程"""
+    t_cam = threading.Thread(target=cam)  # 函数名不能带括号
+    t_cam.start()
+
+def end():
+    # t_cam = threading.Thread(target=cam)  # 函数名不能带括号
+    stop_thread(t_cam)
+
+
+def stop_thread(thread):
+    _async_raise(thread.ident, SystemExit)
+
+def _async_raise(tid, exctype):
+    """raises the exception, performs cleanup if needed"""
+    tid = ctypes.c_long(tid)
+    if not inspect.isclass(exctype):
+        exctype = type(exctype)
+    res = ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, ctypes.py_object(exctype))
+    if res == 0:
+        raise ValueError("invalid thread id")
+    elif res != 1:
+        # """if it returns a number greater than one, you're in trouble,
+        # and you should call it again with exc=NULL to revert the effect"""
+        ctypes.pythonapi.PyThreadState_SetAsyncExc(tid, None)
+        raise SystemError("PyThreadState_SetAsyncExc failed")
+
+if __name__ == '__main__':
+    main()
