@@ -6,6 +6,7 @@ import threading
 import cv2
 import time
 import shutil
+import l298n_driver
 
 from PIL import Image
 import numpy as np
@@ -94,7 +95,7 @@ def cam():
             # 膨胀图像
             thresh = cv2.dilate(thresh, None, iterations=2)
             # findContours检测物体轮廓(寻找轮廓的图像,轮廓的检索模式,轮廓的近似办法)
-            contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            images,contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             # contours 有很多不同形状的轮廓，用c进行遍历，小于某个值时进行下一轮，大于某个值说明图像更改较大，有物体进入
             for c in contours:
                 # 设置敏感度
@@ -109,7 +110,7 @@ def cam():
                     print("出现目标物，请求核实第"+str(num_pict)+"张_"+str(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime(time.time()))))
 
                     ret, frame = camera.read()
-                    cv2.imshow("PIC", frame)
+                    #cv2.imshow("PIC", frame)
                     cv2.waitKey(1)
 
                     mingcheng = save_path+str(num_pict)+str(time.strftime("%m-%d_%H-%M-%S", time.localtime(time.time())))+".png"
@@ -123,15 +124,20 @@ def cam():
                     #dc_example.main()
 
                     if t == 1:
+
+                        l298n_driver.clas(t)
                         update_data(1, 0, 0, 0)
                         print("数据库更新成功！")
                     if t == 2:
+                        l298n_driver.clas(t)
                         update_data(0, 1, 0, 0)
                         print("数据库更新成功！")
                     if t == 3:
+                        l298n_driver.clas(t)
                         update_data(0, 0, 1, 0)
                         print("数据库更新成功！")
                     if t == 4:
+                        l298n_driver.clas(t)
                         update_data(0, 0, 0, 1)
                         print("数据库更新成功！")
                     test_webtts.main("恭喜您，完成垃圾分类，此次获得积分，3分，目前账户积分，34分。")
@@ -163,8 +169,8 @@ def cam():
             # print(num_pict)
 
             # 显示图像
-            cv2.imshow("capture", frame)
-            cv2.imshow("Thresh", thresh)
+            #cv2.imshow("capture", frame)
+            #cv2.imshow("Thresh", thresh)
             # 进行阀值化来显示图片中像素强度值有显著变化的区域的画面
             # cv2.imshow("Frame Delta", img_delta)
             # 不同按键不同功能
